@@ -1,8 +1,11 @@
 import express from "express";
+import cors from "cors";
+
 
 const app = express();
 const port = 8000;
 
+app.use(cors());
 app.use(express.json());
 
 const users = { 
@@ -79,8 +82,10 @@ app.post('/users', (req, res) => {
     const userToAdd = req.body;
     // console.log('user to add:', userToAdd)
     // console.log('request:', Object.keys(req))
-    const user = addUser(userToAdd);
-    res.send(user);
+    const userId = Math.random().toString()
+    const user = { id: userId, ...userToAdd, };
+    const added = addUser(user);
+    res.status(201).send(added);
 });
 
 app.get('/users', (req, res) => {
@@ -103,8 +108,8 @@ app.get('/users', (req, res) => {
 
 app.delete('/users/:id', (req, res) => {
     console.log(req.params.id)
-    deleteUserById(req.params['id']);
-    res.send()
+    deleteUserById(req.params.id);
+    res.status(204).send()
 })
 
 
